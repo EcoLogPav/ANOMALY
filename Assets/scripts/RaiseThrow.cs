@@ -6,6 +6,7 @@ public class RaiseThrow : MonoBehaviour
 {
     private IInteracableObject CurrentObject;
     [SerializeField] private KeyCode DropButton;
+    [SerializeField] private KeyCode DropButtonWithForce;
     [SerializeField] private KeyCode PickButton;
     [SerializeField] private Transform CenterArm;
     [SerializeField] private Transform Arm;
@@ -29,9 +30,10 @@ public class RaiseThrow : MonoBehaviour
                 (CurrentObject as PickInteractableObject).Use();
             }
         }
-        if (Input.GetKeyDown(PickButton))
-            {
+       
             if (CurrentObject == default(IInteracableObject))
+            {
+            if (Input.GetKeyDown(PickButton))
             {
                 RaycastHit hit;
                 Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
@@ -47,12 +49,22 @@ public class RaiseThrow : MonoBehaviour
 
                 }
             }
+            }
             else
             {
-                CurrentObject.StopInteract();
-                CurrentObject = default(IInteracableObject);
+                if (Input.GetKeyDown(DropButton))
+                {
+                    CurrentObject.StopInteractWeakly();
+                    CurrentObject = default(IInteracableObject);
+                }
+                if (Input.GetKeyDown(DropButtonWithForce))
+                {
+                    CurrentObject.StopInteract();
+                    CurrentObject = default(IInteracableObject);
+                }
+               
             }
-        }
+        
        
     }
     

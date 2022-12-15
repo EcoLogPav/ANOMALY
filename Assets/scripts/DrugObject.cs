@@ -9,15 +9,21 @@ public class DrugObject : MonoBehaviour,IInteracableObject
     protected bool Picked { get; private set; }
     [SerializeField] private Vector3 DragOffset;
     [SerializeField] private float throwForce = 100f;
-
+    [SerializeField] private RaiseThrow Arm;
     private void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
     }
+    private void Update()
+    {
+            }
    
     public  void StopInteract()
     {
-        Picked= false;
+        rigidBody.freezeRotation = false ;
+        Picked = false;
+        rigidBody.GetComponent<Collider>().enabled = true;
+       
         rigidBody.useGravity = true;
         rigidBody.AddForce(transform.parent.forward * throwForce);
         transform.SetParent (null);
@@ -27,9 +33,22 @@ public class DrugObject : MonoBehaviour,IInteracableObject
     public  void Interact(RaiseThrow raiseThrow)
     {
         Picked= true;
+       rigidBody.GetComponent<Collider>().enabled = false;
+       
+        rigidBody.freezeRotation = true;
         transform.SetParent(raiseThrow.Container);
         transform.localPosition = DragOffset;
         rigidBody.useGravity = false;
         Debug.Log("1");
+    }
+    public void StopInteractWeakly()
+    {
+        rigidBody.freezeRotation = false;
+        Picked = false;
+        rigidBody.GetComponent<Collider>().enabled = true;
+
+        rigidBody.useGravity = true;
+       
+        transform.SetParent(null);
     }
     }
